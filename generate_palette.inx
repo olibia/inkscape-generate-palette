@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+	<_name>Generate Palette</_name>
+	<id>hardpixel.eu.generate_palette</id>
+	<dependency type="executable" location="extensions">generate_palette.py</dependency>
+	<dependency type="executable" location="extensions">simplestyle.py</dependency>
+
+	<!-- start notebook -->
+	<param name='active-tab' type="notebook">
+
+		<page name='generate-pallette' _gui-text='Generate your palette'>
+			<param name="paletteName" type="string" gui-text="Palette Name"></param>
+
+			<param name="ColorOrigin" type="optiongroup" appearance="minimal" _gui-text="Select colors from">
+				<option value="FillColor">Fill Color</option>
+				<option value="StrokeColor">Stroke Color</option>
+				<option value="Both">Both</option>
+			</param>
+
+		</page>
+
+		<page name="Help" _gui-text="Help">
+
+			<_param name="help" type="description" xml:space="preserve">Generate Palette
+First select at least two objects.
+Enter the name of your custom palette.
+Selected objects must have color properties set.
+After completion the generated palette will be saved in “~/.config/inkscape/extensions/”
+and will be available for use after restarting Inkscape.
+			</_param>
+
+		</page>
+
+	</param>
+
+	<effect>
+		<object-type>all</object-type>
+		<effects-menu>
+			<submenu _name="Color"/>
+		</effects-menu>
+	</effect>
+
+	<script>
+		<command reldir="extensions" interpreter="python">generate_palette.py</command>
+	</script>
+
+</inkscape-extension>
