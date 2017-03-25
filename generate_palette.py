@@ -9,7 +9,7 @@ import os
 import inkex
 import simplestyle
 
-__version__ = '0.1'
+__version__ = '1.0'
 
 inkex.localize()
 
