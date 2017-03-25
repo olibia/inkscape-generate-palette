@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
-	<_name>Generate Palette</_name>
-	<id>hardpixel.eu.generate_palette</id>
-	<dependency type="executable" location="extensions">generate_palette.py</dependency>
-	<dependency type="executable" location="extensions">simplestyle.py</dependency>
+  <name>Generate</name>
+  <id>hardpixel.eu.generate_palette</id>
+  <dependency type="executable" location="extensions">generate_palette.py</dependency>
+  <dependency type="executable" location="extensions">simplestyle.py</dependency>
 
-	<!-- start notebook -->
-	<param name='active-tab' type="notebook">
+  <param name="name" type="string" gui-text="Palette Name"></param>
+  <param name="property" type="optiongroup" appearance="minimal" gui-text="Color Property">
+    <option value="fill">Fill Color</option>
+    <option value="stroke">Stroke Color</option>
+    <option value="both">Both</option>
+  </param>
+  <param name="default" type="boolean" gui-text="Include default grays">false</param>
+  <param name="replace" type="boolean" gui-text="Replace existing palette">false</param>
 
-		<page name='generate-pallette' _gui-text='Generate your palette'>
-			<param name="paletteName" type="string" gui-text="Palette Name"></param>
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu _name="Palette"/>
+    </effects-menu>
+  </effect>
 
-			<param name="ColorOrigin" type="optiongroup" appearance="minimal" _gui-text="Select colors from">
-				<option value="FillColor">Fill Color</option>
-				<option value="StrokeColor">Stroke Color</option>
-				<option value="Both">Both</option>
-			</param>
-
-		</page>
-
-		<page name="Help" _gui-text="Help">
-
-			<_param name="help" type="description" xml:space="preserve">Generate Palette
-First select at least two objects.
-Enter the name of your custom palette.
-Selected objects must have color properties set.
-After completion the generated palette will be saved in “~/.config/inkscape/extensions/”
-and will be available for use after restarting Inkscape.
-			</_param>
-
-		</page>
-
-	</param>
-
-	<effect>
-		<object-type>all</object-type>
-		<effects-menu>
-			<submenu _name="Color"/>
-		</effects-menu>
-	</effect>
-
-	<script>
-		<command reldir="extensions" interpreter="python">generate_palette.py</command>
-	</script>
-
+  <script>
+    <command reldir="extensions" interpreter="python">generate_palette.py</command>
+  </script>
 </inkscape-extension>
