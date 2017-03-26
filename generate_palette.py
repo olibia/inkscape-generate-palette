@@ -22,7 +22,6 @@ class GeneratePalette(inkex.Effect):
         self.OptionParser.add_option('-p', '--property', action='store', type='string', dest='property', help='Color property')
         self.OptionParser.add_option('-d', '--default', action='store', type='string', dest='default', help='Default grays')
         self.OptionParser.add_option('-r', '--replace', action='store', type='string', dest='replace', help='Replace existing')
-        self.OptionParser.add_option('-a', '--active-tab', action='store', type='string', dest="active_tab")
 
     def palettes_path(self):
         path = "%s/.config/inkscape/palettes" % os.path.expanduser('~')
