@@ -8,6 +8,9 @@ Copy extension files `generate_palette.inx` and `generate_palette.py` into `~/.c
 Inkscape needs to be restarted for the extension to appear.
 `python2-lxml` must be installed for this extension to work.
 
+### Inkscape Extensions
+Download from Inkscape's Extensions page [here](https://inkscape.org/en/~olibia/%E2%98%85generate-palette-extension).
+
 ### Arch Linux
 [AUR package](https://aur.archlinux.org/packages/inkscape-generate-palette)
 
