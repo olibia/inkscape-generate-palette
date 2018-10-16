@@ -27,8 +27,7 @@ class GeneratePalette(inkex.Effect):
 
     def palettes_path(self):
         if sys.platform == 'win32':
-            path = 'C:/Users/%s' % getpass.getuser()
-            path += '/AppData/Roaming/inkscape/palettes'
+            path = 'C:/Users/%s/AppData/Roaming/inkscape/palettes' % getpass.getuser()
         else:
             path = "%s/.config/inkscape/palettes" % os.path.expanduser('~')
 
