@@ -6,8 +6,6 @@ Inkscape extension to generate color palettes from selected objects' color prope
 """
 
 import os
-import sys
-import getpass
 import inkex
 import simplestyle
 
@@ -26,15 +24,13 @@ class GeneratePalette(inkex.Effect):
         self.OptionParser.add_option('-r', '--replace', action='store', type='string', dest='replace', help='Replace existing')
 
     def palettes_path(self):
-        if sys.platform == 'win32':
-            path = 'C:/Users/%s/AppData/Roaming/inkscape/palettes' % getpass.getuser()
+        if os.name == 'nt':
+            path = os.path.join(os.environ['APPDATA'], 'inkscape', 'palettes')
         else:
-            path = "%s/.config/inkscape/palettes" % os.path.expanduser('~')
+            path = os.environ.get('XDG_CONFIG_HOME', '~/.config')
+            path = os.path.join(path, 'inkscape', 'palettes')
 
-        if not os.path.exists(path):
-            os.makedirs(path)
-
-        return path
+        return os.path.expanduser(path)
 
     def file_path(self):
         name = self.options.name.replace(' ', '-')
