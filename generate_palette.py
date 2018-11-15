@@ -72,9 +72,12 @@ class GeneratePalette(inkex.Effect):
     return simplestyle.parseStyle(node.attrib['style'])
 
   def get_color_values(self):
-    colors = []
+    colors   = []
+    selected = self.selected.items()
 
-    for id, node in self.selected.iteritems():
+    selected.sort(key=lambda n: '{0:0>8}'.format(n[0]))
+
+    for id, node in selected:
       if self.options.property in ['fill', 'both']:
         fill = self.get_node_styles(node)['fill']
         if fill != 'none': colors.append(fill)
@@ -83,7 +86,7 @@ class GeneratePalette(inkex.Effect):
         stroke = self.get_node_styles(node)['stroke']
         if stroke != 'none': colors.append(stroke)
 
-    return list(set(colors))
+    return colors
 
   def write_palette(self):
     colors = self.get_color_values()
