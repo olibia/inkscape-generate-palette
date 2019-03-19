@@ -73,7 +73,7 @@ class GeneratePalette(inkex.Effect):
 
   def get_color_values(self):
     colors   = []
-    selected = self.selected.items()
+    selected = list(self.selected.items())
 
     selected.sort(key=lambda n: '{0:0>8}'.format(n[0]))
 
