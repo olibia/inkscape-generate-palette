@@ -14,6 +14,14 @@ __version__ = '2.0'
 
 inkex.localize()
 
+def log(text):
+  inkex.debug(text)
+
+def abort(text):
+  inkex.errormsg(_(text))
+  exit()
+
+
 class GeneratePalette(inkex.Effect):
 
   def __init__(self):
@@ -21,10 +29,10 @@ class GeneratePalette(inkex.Effect):
 
     self.OptionParser.add_option('-n', '--name', action='store', type='string', dest='name', help='Palette name')
     self.OptionParser.add_option('-p', '--property', action='store', type='string', dest='property', help='Color property')
-    self.OptionParser.add_option('-d', '--default', action='store', type='string', dest='default', help='Default grays')
-    self.OptionParser.add_option('-r', '--replace', action='store', type='string', dest='replace', help='Replace existing')
+    self.OptionParser.add_option('-d', '--default', action='store', type='inkbool', dest='default', help='Default grays')
+    self.OptionParser.add_option('-r', '--replace', action='store', type='inkbool', dest='replace', help='Replace existing')
 
-  def palettes_path(self):
+  def get_palettes_path(self):
     if sys.platform.startswith('win'):
       path = os.path.join(os.environ['APPDATA'], 'inkscape', 'palettes')
     else:
@@ -33,22 +41,11 @@ class GeneratePalette(inkex.Effect):
 
     return os.path.expanduser(path)
 
-  def file_path(self):
-    name = self.options.name.replace(' ', '-')
-    path = self.palettes_path()
-    path = "%s/%s.gpl" % (path, name)
+  def get_file_path(self):
+    name = str(self.options.name).replace(' ', '-')
+    return "%s/%s.gpl" % (self.palettes_path, name)
 
-    if self.options.replace == 'false' and os.path.exists(path):
-      inkex.errormsg(_('Palette already exists!'))
-      exit()
-
-    return path
-
-  def hex_to_rgb(self, color):
-    rgb = list(map(lambda s: int(s, 16), (color[1:3], color[3:5], color[5:7])))
-    return rgb
-
-  def default_colors(self):
+  def get_default_colors(self):
     colors = [
       "  0   0   0  Black",
       " 26  26  26  90% Gray",
@@ -66,55 +63,69 @@ class GeneratePalette(inkex.Effect):
       "255 255 255  White"
     ]
 
-    return "\n".join(colors)
+    return colors if self.options.default else []
 
-  def get_node_styles(self, node):
-    return simplestyle.parseStyle(node.attrib['style'])
+  def get_node_prop(self, node, property):
+    style = simplestyle.parseStyle(node.attrib['style'])
+    return style[property]
 
-  def get_color_values(self):
+  def get_node_index(self, args):
+    id, node = args
+    return self.options.ids.index(id)
+
+  def get_formatted_color(self, color):
+    rgb = simplestyle.parseColor(color)
+    rgb = "{:3d} {:3d} {:3d}".format(*rgb)
+
+    return "%s  %s" % (rgb, color)
+
+  def get_selected_colors(self):
     colors   = []
     selected = list(self.selected.items())
 
-    selected.sort(key=lambda n: '{0:0>8}'.format(n[0]))
+    selected.sort(key=self.get_node_index)
 
     for id, node in selected:
       if self.options.property in ['fill', 'both']:
-        fill = self.get_node_styles(node)['fill']
-        if fill != 'none': colors.append(fill)
+        fill = self.get_node_prop(node, 'fill')
+
+        if fill != 'none' and fill not in colors:
+          colors.append(fill)
 
       if self.options.property in ['stroke', 'both']:
-        stroke = self.get_node_styles(node)['stroke']
-        if stroke != 'none': colors.append(stroke)
+        stroke = self.get_node_prop(node, 'stroke')
 
-    return colors
+        if stroke != 'none' and stroke not in colors:
+          colors.append(stroke)
+
+    return list(map(self.get_formatted_color, colors))
 
   def write_palette(self):
-    colors = self.get_color_values()
-
-    if len(colors) == 0:
-      inkex.errormsg(_('No colors found in selected objects!'))
-      exit()
-
-    file = open(self.file_path(), 'w')
+    file = open(self.file_path, 'w')
     file.write("GIMP Palette\n")
     file.write("Name: %s\n" % self.options.name)
     file.write("#\n# Generated with Inkscape Generate Palette\n#\n")
 
-    if self.options.default == 'true':
-      file.write("%s\n" % self.default_colors())
-
-    for color in colors:
-      rgb = self.hex_to_rgb(color)
-      file.write("%s  %s\n" % ("{:3d} {:3d} {:3d}".format(*rgb), color))
+    for color in (self.default_colors + self.selected_colors):
+      file.write("%s\n" % color)
 
   def effect(self):
-    if self.options.name is None:
-      inkex.errormsg(_('Please enter a palette name.'))
-      exit()
+    self.palettes_path   = self.get_palettes_path()
+    self.file_path       = self.get_file_path()
+    self.default_colors  = self.get_default_colors()
+    self.selected_colors = self.get_selected_colors()
+
+    if not self.options.replace and os.path.exists(self.file_path):
+      abort('Palette already exists!')
+
+    if not self.options.name:
+      abort('Please enter a palette name.')
 
     if len(self.options.ids) < 2:
-      inkex.errormsg(_('Please select at least 2 objects.'))
-      exit()
+      abort('Please select at least 2 objects.')
+
+    if not len(self.selected_colors):
+      abort('No colors found in selected objects!')
 
     self.write_palette()
 
