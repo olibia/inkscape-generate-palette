@@ -102,12 +102,16 @@ class GeneratePalette(inkex.Effect):
 
   def write_palette(self):
     file = open(self.file_path, 'w')
-    file.write("GIMP Palette\n")
-    file.write("Name: %s\n" % self.options.name)
-    file.write("#\n# Generated with Inkscape Generate Palette\n#\n")
 
-    for color in (self.default_colors + self.selected_colors):
-      file.write("%s\n" % color)
+    try:
+      file.write("GIMP Palette\n")
+      file.write("Name: %s\n" % self.options.name)
+      file.write("#\n# Generated with Inkscape Generate Palette\n#\n")
+
+      for color in (self.default_colors + self.selected_colors):
+        file.write("%s\n" % color)
+    finally:
+      file.close()
 
   def effect(self):
     self.palettes_path   = self.get_palettes_path()
