@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<inkscape-extension>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
   <name>Generate</name>
   <id>hardpixel.eu.generate_palette</id>
-  <dependency type="executable" location="extensions">generate_palette.py</dependency>
-  <dependency type="executable" location="extensions">simplestyle.py</dependency>
 
-  <param name="description" type="description" indent="-1">Select a set of objects and create a custom color palette.</param>
-  <param name="properties-title" type="description" appearance="header">Palette Properties</param>
-  <param name="name-label" type="description" indent="-1">Palette Name</param>
-  <param name="name" type="string" gui-text=""></param>
-  <param name="property-label" type="description" indent="-1">Color Property</param>
-  <param name="property" type="enum" gui-text="">
-    <item value="fill">Fill Color</item>
-    <item value="stroke">Stroke Color</item>
-    <item value="both">Both</item>
-  </param>
-  <param name="options-title" type="description" appearance="header">Options</param>
-  <param name="default" type="boolean" gui-text="Include default grays">false</param>
-  <param name="replace" type="boolean" gui-text="Replace existing palette">false</param>
-  <param name="help-text" type="description" indent="-1">ℹ️ Don't forget to restart Inkscape </param>
+  <label>Select a set of objects and create a custom color palette.</label>
+  <label appearance="header">Palette Properties</label>
 
+  <label>Palette Name</label>
+  <param name="name" type="string" gui-text=" "></param>
+
+  <vbox>
+    <label>Color Property</label>
+    <param name="property" type="optiongroup" appearance="combo" gui-text=" ">
+      <option value="fill">Fill Color</option>
+      <option value="stroke">Stroke Color</option>
+      <option value="both">Both</option>
+    </param>
+  </vbox>
+
+  <label appearance="header">Options</label>
+  <param name="default" type="bool" gui-text="Include default grays">false</param>
+  <param name="replace" type="bool" gui-text="Replace existing palette">false</param>
+
+  <spacer />
+
+  <hbox>
+    <image>info.svg</image>
+    <label>Don't forget to restart Inkscape</label>
+  </hbox>
 
   <effect needs-live-preview="false">
     <object-type>all</object-type>
@@ -29,6 +37,6 @@
   </effect>
 
   <script>
-    <command reldir="extensions" interpreter="python">generate_palette.py</command>
+    <command location="inx" interpreter="python">generate_palette.py</command>
   </script>
 </inkscape-extension>

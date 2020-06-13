@@ -8,29 +8,46 @@ Inkscape extension to generate color palettes from selected objects' color prope
 import os
 import sys
 import inkex
-import simplestyle
-
-__version__ = '2.0'
-
-inkex.localize()
 
 def log(text):
-  inkex.debug(text)
+  inkex.utils.debug(text)
 
 def abort(text):
   inkex.errormsg(_(text))
   exit()
-
 
 class GeneratePalette(inkex.Effect):
 
   def __init__(self):
     inkex.Effect.__init__(self)
 
-    self.OptionParser.add_option('-n', '--name', action='store', type='string', dest='name', help='Palette name')
-    self.OptionParser.add_option('-p', '--property', action='store', type='string', dest='property', help='Color property')
-    self.OptionParser.add_option('-d', '--default', action='store', type='inkbool', dest='default', help='Default grays')
-    self.OptionParser.add_option('-r', '--replace', action='store', type='inkbool', dest='replace', help='Replace existing')
+    self.arg_parser.add_argument(
+      '-n', '--name',
+      type=str,
+      dest='name',
+      help='Palette name'
+    )
+
+    self.arg_parser.add_argument(
+      '-p', '--property',
+      type=str,
+      dest='property',
+      help='Color property'
+    )
+
+    self.arg_parser.add_argument(
+      '-d', '--default',
+      type=inkex.Boolean,
+      dest='default',
+      help='Default grays'
+    )
+
+    self.arg_parser.add_argument(
+      '-r', '--replace',
+      type=inkex.Boolean,
+      dest='replace',
+      help='Replace existing'
+    )
 
   def get_palettes_path(self):
     if sys.platform.startswith('win'):
@@ -66,22 +83,24 @@ class GeneratePalette(inkex.Effect):
     return colors if self.options.default else []
 
   def get_node_prop(self, node, property):
-    style = simplestyle.parseStyle(node.attrib['style'])
-    return style[property]
+    attr = node.attrib.get('style')
+    style = dict(inkex.Style.parse_str(attr))
+
+    return style.get(property, 'none')
 
   def get_node_index(self, args):
     id, node = args
     return self.options.ids.index(id)
 
   def get_formatted_color(self, color):
-    rgb = simplestyle.parseColor(color)
+    rgb = inkex.Color(color).to_rgb()
     rgb = "{:3d} {:3d} {:3d}".format(*rgb)
 
     return "%s  %s" % (rgb, color)
 
   def get_selected_colors(self):
     colors   = []
-    selected = list(self.selected.items())
+    selected = list(self.svg.selected.items())
 
     selected.sort(key=self.get_node_index)
 
@@ -133,7 +152,6 @@ class GeneratePalette(inkex.Effect):
 
     self.write_palette()
 
-
 if __name__ == '__main__':
   palette = GeneratePalette()
-  palette.affect()
+  palette.run()
