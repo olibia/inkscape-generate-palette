@@ -89,7 +89,9 @@ class GeneratePalette(inkex.Effect):
     return style.get(property, 'none')
 
   def get_node_index(self, args):
-    id, node = args
+    node = args[1]
+    id = node.attrib.get('id')
+
     return self.options.ids.index(id)
 
   def get_formatted_color(self, color):
