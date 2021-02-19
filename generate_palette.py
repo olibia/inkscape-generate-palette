@@ -44,9 +44,9 @@ class GeneratePalette(inkex.Effect):
 
     self.arg_parser.add_argument(
       '-s', '--sort',
-      type=inkex.Boolean,
+      type=str,
       dest='sort',
-      help='Sort colors by HSL values'
+      help='Sort type'
     )
 
     self.arg_parser.add_argument(
@@ -102,12 +102,17 @@ class GeneratePalette(inkex.Effect):
     return self.options.ids.index(id)
 
   def get_formatted_color(self, color):
-    hsl = inkex.Color(color).to_hsl()
     rgb = inkex.Color(color).to_rgb()
-    hsl = "{:03d}{:03d}{:03d}".format(*hsl)
+    
+    if self.options.sort == 'hsl':
+      key = inkex.Color(color).to_hsl()
+      key = "{:03d}{:03d}{:03d}".format(*key)
+    else:      
+      key = "{:03d}{:03d}{:03d}".format(*rgb)
+            
     rgb = "{:3d} {:3d} {:3d}".format(*rgb)
 
-    return "%s  %s  %s" % (hsl, rgb, color)
+    return "%s  %s  %s" % (key, rgb, color)
 
   def get_selected_colors(self):
     colors   = []
@@ -130,8 +135,8 @@ class GeneratePalette(inkex.Effect):
 
     colors = list(map(self.get_formatted_color, colors))
 
-    if self.options.sort:
-        colors.sort()
+    if self.options.sort != 'unsorted':
+      colors.sort()
 
     return list(map(lambda x : x[11:], colors))
 
