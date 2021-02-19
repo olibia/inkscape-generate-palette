@@ -148,8 +148,12 @@ class GeneratePalette(inkex.Effect):
       file.write("Name: %s\n" % self.options.name)
       file.write("#\n# Generated with Inkscape Generate Palette\n#\n")
 
-      for color in (self.default_colors + self.selected_colors):
+      for color in self.default_colors:
         file.write("%s\n" % color)
+
+      for color in self.selected_colors:
+        if color[:11] not in list(map(lambda x : x[:11], self.default_colors)):
+          file.write("%s\n" % color)
     finally:
       file.close()
 
