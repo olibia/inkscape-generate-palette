@@ -20,6 +20,7 @@
 
   <label appearance="header">Options</label>
   <param name="default" type="bool" gui-text="Include default grays">false</param>
+  <param name="sort" type="bool" gui-text="Sort colors by HSL values">false</param>
   <param name="replace" type="bool" gui-text="Replace existing palette">false</param>
 
   <spacer />
