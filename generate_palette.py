@@ -111,8 +111,13 @@ class GeneratePalette(inkex.Effect):
       key = "{:03d}{:03d}{:03d}".format(*rgb)
             
     rgb = "{:3d} {:3d} {:3d}".format(*rgb)
+    color = str(color).upper()
+    name = str(inkex.Color(color).to_named()).upper()
+    
+    if name != color:
+      name = "%s (%s)" % (name.capitalize(), color)
 
-    return "%s  %s  %s" % (key, rgb, color)
+    return "%s  %s  %s" % (key, rgb, name)
 
   def get_selected_colors(self):
     colors   = []
