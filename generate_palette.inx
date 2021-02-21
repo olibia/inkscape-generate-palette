@@ -10,8 +10,7 @@
   <param name="name" type="string" gui-text=" "></param>
 
   <vbox>
-    <label>Color Property</label>
-    <param name="property" type="optiongroup" appearance="combo" gui-text=" ">
+    <param name="property" type="optiongroup" appearance="combo" gui-text="Color Property">
       <option value="fill">Fill Color</option>
       <option value="stroke">Stroke Color</option>
       <option value="both">Both</option>
@@ -21,6 +20,11 @@
   <label appearance="header">Options</label>
   <param name="default" type="bool" gui-text="Include default grays">false</param>
   <param name="replace" type="bool" gui-text="Replace existing palette">false</param>
+  <param name="sort" type="optiongroup" appearance="combo" gui-text="Sort colors">
+      <option value="unsorted">Unsorted</option>
+      <option value="hsl">By HSL values</option>
+      <option value="rgb">By RGB values</option>
+  </param>
 
   <spacer />
 

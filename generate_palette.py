@@ -43,6 +43,13 @@ class GeneratePalette(inkex.Effect):
     )
 
     self.arg_parser.add_argument(
+      '-s', '--sort',
+      type=str,
+      dest='sort',
+      help='Sort type'
+    )
+
+    self.arg_parser.add_argument(
       '-r', '--replace',
       type=inkex.Boolean,
       dest='replace',
@@ -96,9 +103,21 @@ class GeneratePalette(inkex.Effect):
 
   def get_formatted_color(self, color):
     rgb = inkex.Color(color).to_rgb()
+    
+    if self.options.sort == 'hsl':
+      key = inkex.Color(color).to_hsl()
+      key = "{:03d}{:03d}{:03d}".format(*key)
+    else:      
+      key = "{:03d}{:03d}{:03d}".format(*rgb)
+            
     rgb = "{:3d} {:3d} {:3d}".format(*rgb)
+    color = str(color).upper()
+    name = str(inkex.Color(color).to_named()).upper()
+    
+    if name != color:
+      name = "%s (%s)" % (name.capitalize(), color)
 
-    return "%s  %s" % (rgb, color)
+    return "%s  %s  %s" % (key, rgb, name)
 
   def get_selected_colors(self):
     colors   = []
@@ -119,7 +138,12 @@ class GeneratePalette(inkex.Effect):
         if stroke != 'none' and stroke not in colors:
           colors.append(stroke)
 
-    return list(map(self.get_formatted_color, colors))
+    colors = list(map(self.get_formatted_color, colors))
+
+    if self.options.sort != 'unsorted':
+      colors.sort()
+
+    return list(map(lambda x : x[11:], colors))
 
   def write_palette(self):
     file = open(self.file_path, 'w')
@@ -129,8 +153,12 @@ class GeneratePalette(inkex.Effect):
       file.write("Name: %s\n" % self.options.name)
       file.write("#\n# Generated with Inkscape Generate Palette\n#\n")
 
-      for color in (self.default_colors + self.selected_colors):
+      for color in self.default_colors:
         file.write("%s\n" % color)
+
+      for color in self.selected_colors:
+        if color[:11] not in list(map(lambda x : x[:11], self.default_colors)):
+          file.write("%s\n" % color)
     finally:
       file.close()
 
