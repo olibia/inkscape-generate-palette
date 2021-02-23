@@ -1,7 +1,7 @@
 # Inkscape Generate Palette
 Inkscape extension to generate color palettes from selected objects' color properties.
 
-![Screenshot](https://raw.githubusercontent.com/olibia/inkscape-generate-palette/master/screenshot.png)
+![Screenshot](screenshot.png?raw=true)
 
 ## Install
 
@@ -14,7 +14,7 @@ Download from Inkscape's Extensions page [here](https://inkscape.org/en/~olibia/
 ### Manual installation
 
 #### Linux
-Copy extension files `generate_palette.inx` and `generate_palette.py` into `~/.config/inkscape/extensions`.
+Copy extension files `generate_palette.inx`, `generate_palette.py` and `info.svg` into `~/.config/inkscape/extensions`.
 
 #### Windows
 Copy extension files `generate_palette.inx` and `generate_palette.py` into the path shown in Inkscape preferences.
