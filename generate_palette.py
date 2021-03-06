@@ -129,14 +129,16 @@ class GeneratePalette(inkex.Effect):
       if self.options.property in ['fill', 'both']:
         fill = self.get_node_prop(node, 'fill')
 
-        if fill != 'none' and fill not in colors:
-          colors.append(fill)
+        if inkex.colors.is_color(fill):   
+          if fill != 'none' and fill not in colors:
+            colors.append(fill)
 
       if self.options.property in ['stroke', 'both']:
         stroke = self.get_node_prop(node, 'stroke')
 
-        if stroke != 'none' and stroke not in colors:
-          colors.append(stroke)
+        if inkex.colors.is_color(stroke):
+          if stroke != 'none' and stroke not in colors:
+            colors.append(stroke)
 
     colors = list(map(self.get_formatted_color, colors))
 
