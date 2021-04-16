@@ -142,7 +142,7 @@ class GeneratePalette(inkex.Effect):
 
     colors = list(map(self.get_formatted_color, colors))
 
-    if self.options.sort != 'unsorted':
+    if self.options.sort != 'z_index':
       colors.sort()
 
     return list(map(lambda x : x[11:], colors))
