@@ -24,6 +24,8 @@
       <option value="z_index">Z Index</option>
       <option value="hsl">By HSL values</option>
       <option value="rgb">By RGB values</option>
+      <option value="z_index">X Location</option>
+      <option value="z_index">Y Location</option>
   </param>
 
   <spacer />
