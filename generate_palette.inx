@@ -21,11 +21,11 @@
   <param name="default" type="bool" gui-text="Include default grays">false</param>
   <param name="replace" type="bool" gui-text="Replace existing palette">false</param>
   <param name="sort" type="optiongroup" appearance="combo" gui-text="Sort colors">
-      <option value="z_index">Z Index</option>
+      <option value="selection">Selection / Z-index</option>
       <option value="hsl">By HSL values</option>
       <option value="rgb">By RGB values</option>
-      <option value="z_index">X Location</option>
-      <option value="z_index">Y Location</option>
+      <option value="x_location">X Location</option>
+      <option value="y_location">Y Location</option>
   </param>
 
   <spacer />
