@@ -95,11 +95,24 @@ class GeneratePalette(inkex.Effect):
 
     return style.get(property, 'none')
 
-  def get_node_index(self, args):
-    node = args[1]
+
+
+  def get_node_index(self, item):
+    node = item[1]
     id = node.attrib.get('id')
 
     return self.options.ids.index(id)
+
+  def get_node_x(self, item):
+    node = item[1]
+    return node.bounding_box().center_x
+
+  def get_node_y(self, item):
+    node = item[1]
+    return node.bounding_box().center_y
+  
+
+
 
   def get_formatted_color(self, color):
     rgb = inkex.Color(color).to_rgb()
@@ -119,11 +132,20 @@ class GeneratePalette(inkex.Effect):
 
     return "%s  %s  %s" % (key, rgb, name)
 
+
+
   def get_selected_colors(self):
     colors   = []
     selected = list(self.svg.selected.items())
 
-    selected.sort(key=self.get_node_index)
+    if self.options.sort == 'y_location':
+      selected.sort(key=self.get_node_x)
+      selected.sort(key=self.get_node_y)
+    elif self.options.sort == 'x_location':
+      selected.sort(key=self.get_node_y)
+      selected.sort(key=self.get_node_x)
+    else:
+      selected.sort(key=self.get_node_index)
 
     for id, node in selected:
       if self.options.property in ['fill', 'both']:
@@ -142,10 +164,12 @@ class GeneratePalette(inkex.Effect):
 
     colors = list(map(self.get_formatted_color, colors))
 
-    if self.options.sort != 'unsorted':
+    if self.options.sort == 'hsl' or self.options.sort == 'rgb':
       colors.sort()
 
     return list(map(lambda x : x[11:], colors))
+
+
 
   def write_palette(self):
     file = open(self.file_path, 'w')
