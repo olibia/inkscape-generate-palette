@@ -104,25 +104,20 @@ class GeneratePalette(inkex.Effect):
 
   def get_node_yx(self, item):
     node_bbox = item[1].bounding_box()
-    x_grouping = self.round_to( node_bbox.center_x - self.bbox.left, 
-      self.divide_to(self.bbox.width, node_bbox.width) )
-    y_grouping = node_bbox.center_y - self.bbox.top
-    return y_grouping + x_grouping
+
+    return [ self.round_to(node_bbox.center_x - self.bbox.left, node_bbox.height), 
+      node_bbox.center_y ]
 
   def get_node_xy(self, item):
     node_bbox = item[1].bounding_box()
-    x_grouping = node_bbox.center_x - self.bbox.left
-    y_grouping = self.round_to( node_bbox.center_y - self.bbox.top, 
-      self.divide_to( self.bbox.height, node_bbox.height) )
-    return x_grouping + (y_grouping * self.bbox.width)
+    
+    return [ self.round_to(node_bbox.center_y - self.bbox.top, node_bbox.height), 
+      node_bbox.center_x ]
 
   @staticmethod
   def round_to(val, unit):
     return val - (val % unit)
 
-  @staticmethod
-  def divide_to(val, unit):
-    return val / round(val / unit)
 
 
   def get_formatted_color(self, color):
