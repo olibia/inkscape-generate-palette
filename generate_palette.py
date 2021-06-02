@@ -140,21 +140,19 @@ class GeneratePalette(inkex.Effect):
 
   def get_selected_colors(self):
     colors   = []
-    selected = []
 
-    if self.options.sort == 'z_index':
-      selected = list(self.svg.get_z_selected().items())
-    else:
-      selected = list(self.svg.selected.items())
+    selected = list(self.svg.get_z_selected().items())
 
-    if self.options.sort == 'xy_location':
+    if self.options.sort == 'selection':
+      selected.sort(key=self.get_node_index)
+
+    elif self.options.sort == 'xy_location':
       self.selected_bbox = self.svg.get_selected_bbox()
       selected.sort(key=self.get_node_xy)
+      
     elif self.options.sort == 'yx_location':
       self.selected_bbox = self.svg.get_selected_bbox()
       selected.sort(key=self.get_node_yx)
-    elif self.options.sort == 'selection':
-      selected.sort(key=self.get_node_index)
       
 
     for id, node in selected:
