@@ -104,13 +104,13 @@ class GeneratePalette(inkex.Effect):
 
   def get_node_yx(self, item):
     node_bbox = item[1].bounding_box()
-    return [ self.round_to(node_bbox.center_x - self.selected_bbox.left, node_bbox.height), 
-      node_bbox.center_y ]
+    x = node_bbox.center_x - self.selected_bbox.left
+    return [ self.round_to(x, node_bbox.width), node_bbox.center_y ]
 
   def get_node_xy(self, item):
     node_bbox = item[1].bounding_box()
-    return [ self.round_to(node_bbox.center_y - self.selected_bbox.top, node_bbox.height), 
-      node_bbox.center_x ]
+    y = node_bbox.center_y - self.selected_bbox.top
+    return [ self.round_to(y, node_bbox.height), node_bbox.center_x ]
 
   @staticmethod
   def round_to(val, unit):
@@ -140,7 +140,12 @@ class GeneratePalette(inkex.Effect):
 
   def get_selected_colors(self):
     colors   = []
-    selected = list(self.svg.selected.items())
+    selected = []
+
+    if self.options.sort == 'z_index':
+      selected = list(self.svg.get_z_selected().items())
+    else:
+      selected = list(self.svg.selected.items())
 
     if self.options.sort == 'xy_location':
       self.selected_bbox = self.svg.get_selected_bbox()
@@ -148,8 +153,9 @@ class GeneratePalette(inkex.Effect):
     elif self.options.sort == 'yx_location':
       self.selected_bbox = self.svg.get_selected_bbox()
       selected.sort(key=self.get_node_yx)
-    else:
+    elif self.options.sort == 'selection':
       selected.sort(key=self.get_node_index)
+      
 
     for id, node in selected:
       if self.options.property in ['fill', 'both']:
