@@ -141,7 +141,7 @@ class GeneratePalette(inkex.Effect):
   def get_selected_colors(self):
     colors   = []
 
-    selected = list(self.svg.selection.items())
+    selected = list(self.svg.selected.items())
 
     if self.options.sort == 'selection':
       selected.sort(key=self.get_node_index)
